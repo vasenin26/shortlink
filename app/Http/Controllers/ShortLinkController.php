@@ -37,10 +37,7 @@ class ShortLinkController extends Controller
 
         ShortLink::whereId($shortLink->id)->update(['counter' => DB::raw('counter + 1')]);
 
-        return response()->json([
-            'id' => $shortLink->id,
-            'link' => route('decoder', $shortLink->origin)
-        ]);
+        return response()->redirectTo($shortLink->origin, 301);
 
     }
 }
