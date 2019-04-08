@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\ShortLink;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class ShortLinkController extends Controller
 {
@@ -26,6 +27,19 @@ class ShortLinkController extends Controller
         return response()->json([
             'id' => $shortLink->id,
             'link' => route('decoder', $shortLink->getLinkCode())
+        ]);
+
+    }
+
+    public function decode($code){
+
+        $shortLink = ShortLink::findByCode($code);
+
+        ShortLink::whereId($shortLink->id)->update(['counter' => DB::raw('counter + 1')]);
+
+        return response()->json([
+            'id' => $shortLink->id,
+            'link' => route('decoder', $shortLink->origin)
         ]);
 
     }
